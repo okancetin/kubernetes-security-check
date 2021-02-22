@@ -14,3 +14,21 @@ func createK8sClient(endpoint, kubeCfgPath string) (*k8s.Clientset, error) {
 	}
 	return k8s.NewForConfig(config)
 }
+
+func NewInClusterClientWithEndpoint(endpoint string) (Client, error) {
+	config, err := rest.InClusterConfig()
+	if err != nil {
+		return nil, err
+	}
+
+	config.Host = endpoint
+
+	clientset, err := kubernetes.NewForConfig(config)
+	if err != nil {
+		return nil, err
+	}
+
+	return &clientImpl{
+		clientset: clientset,
+	}, nil
+}
