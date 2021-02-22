@@ -42,3 +42,16 @@ func GetConfig() (*rest.Config, error) {
 func GetConfigFromFile(kubeconfig string) (*rest.Config, error) {
 	return clientcmd.BuildConfigFromFlags("", kubeconfig)
 }
+
+func BuildConfig(conf []byte) (*rest.Config, error) {
+	return clientcmd.RESTConfigFromKubeConfig(conf)
+}
+
+func GetConfigOrDie() *rest.Config {
+	config, err := GetConfig()
+	if err != nil {
+		fmt.Printf("unable to get kubeconfig:%v", err)
+	}
+	return config
+}
+
